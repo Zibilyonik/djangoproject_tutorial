@@ -7,36 +7,39 @@ Functions:
     vote(request, question_id): Vote for a specific question.
 """
 
-from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import F
-from django.shortcuts import render, get_object_or_404
-from .models import Question, Choice
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
+from django.views import generic
+
+from .models import Choice, Question
 
 
-def index(request):
+class IndexView(generic.ListView):
     """
     Display the latest questions.
     """
-    latest_question_list = Question.objects.order_by("-pub_date")[:5]
-    context = {"latest_question_list": latest_question_list}
-    return render(request, "polls/index.html", context)
+    template_name = "polls/index.html"
+    context_object_name = "latest_question_list"
+    def get_queryset(self):
+        return Question.objects.order_by("-pub_date")[:5]
 
 
-def detail(request, question_id):
+class DetailView(generic.DetailView):
     """
     Display the details of a specific question.
     """
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, "polls/detail.html", {"question": question})
+    model = Question
+    template_name = "polls/detail.html"
 
 
-def results(request, question_id):
+class ResultsView(generic.DetailView):
     """
     Display the results of a specific question.
     """
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, "polls/results.html", {"question": question})
+    model = Question
+    template_name = "polls/results.html"
 
 
 def vote(request, question_id):
