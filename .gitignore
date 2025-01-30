@@ -1,6 +1,8 @@
 # Python
 *.pyc
 __pycache__/
+mysite/__pycache__/*
+polls/__pycache__/*
 
 # Django
 *.log
