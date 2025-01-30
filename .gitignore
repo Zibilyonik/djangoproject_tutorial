@@ -14,17 +14,10 @@ media
 mysite/.env
 
 # Virtual environment
-venv/
-.env/
+.venv/
 
 # VS Code
 .vscode/
-
-# PyCharm
-.idea/
-
-# macOS
-.DS_Store
 
 # Windows
 Thumbs.db
