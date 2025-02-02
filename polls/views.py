@@ -12,6 +12,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
+from django.utils import timezone
 
 from .models import Choice, Question
 
@@ -20,24 +21,57 @@ class IndexView(generic.ListView):
     """
     Display the latest questions.
     """
+
     template_name = "polls/index.html"
     context_object_name = "latest_question_list"
+
     def get_queryset(self):
-        return Question.objects.order_by("-pub_date")[:5]
+        return Question.objects.filter(pub_date__lte = timezone.now()).order_by(
+            "-pub_date"
+        )[:5]
+        # __lte is less than or equal to
+        # __gt is greater than
+        # __lt is less than
+        # __gte is greater than or equal to
+        # __exact is equal to
+        # __iexact is case-insensitive equal to
+        # __contains is contains
+        # __icontains is case-insensitive contains
+        # __in is in
+        # __startswith is starts with
+        # __istartswith is case-insensitive starts with
+        # __endswith is ends with
+        # __iendswith is case-insensitive ends with
+        # __range is in range
+        # __year is year
+        # __month is month
+        # __day is day
+        # __week_day is week day
+        # __hour is hour
+        # __minute is minute
+        # __second is second
+        # __isnull is null
+        # __search is search
+        # __regex is regex
+        # __iregex is case-insensitive regex
 
 
 class DetailView(generic.DetailView):
     """
-    Display the details of a specific question.
+    Display the details of a specific question, while ensuring that the future question is not published.
     """
+
     model = Question
     template_name = "polls/detail.html"
+    def get_queryset(self):
+        return Question.objects.filter(pub_date__lte=timezone.now())
 
 
 class ResultsView(generic.DetailView):
     """
     Display the results of a specific question.
     """
+
     model = Question
     template_name = "polls/results.html"
 
