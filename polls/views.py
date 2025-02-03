@@ -58,7 +58,7 @@ class IndexView(generic.ListView):
 
 class DetailView(generic.DetailView):
     """
-    Display the details of a specific question, while ensuring that the future question is not published.
+    Display the details of a specific question, while ensuring the future question is not published.
     """
 
     model = Question
