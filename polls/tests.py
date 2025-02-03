@@ -41,6 +41,7 @@ class QuestionIndexViewTests(TestCase):
         response = self.client.get(reverse("polls:index"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "No polls are available.")
+        self.assertNotContains(response, question.question_text)
         self.assertQuerySetEqual(response.context["latest_question_list"], [])
 
     def test_future_question_and_past_question(self):
@@ -49,6 +50,7 @@ class QuestionIndexViewTests(TestCase):
         response = self.client.get(reverse("polls:index"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, past_question.question_text)
+        self.assertNotContains(response, future_question.question_text)
         self.assertQuerySetEqual(
             response.context["latest_question_list"], [past_question]
         )
@@ -91,5 +93,5 @@ class QuestionModelTests(TestCase):
         was_published_recently() returns True for questions whose pub_date is younger than 1 day.
         """
         time = timezone.now() + datetime.timedelta(days=-1, minutes=10)
-        old_question = Question(pub_date=time)
-        self.assertIs(old_question.was_published_recently(), True)
+        recent_question = Question(pub_date=time)
+        self.assertIs(recent_question.was_published_recently(), True)
